@@ -7,10 +7,10 @@ export function problem1(array) {
   return Math.max(
     ...array
       .reduce(
-        (curr, next) =>
-          !next
-            ? [...curr, []]
-            : [...curr.splice(-1), [...curr[curr.length - 1], next]],
+        (curr, next) => {
+          !next ? curr.push([]) : curr[curr.length - 1].push(next);
+          return curr;
+        },
         [[]]
       )
       .map((item) => item.reduce((a, b) => a + b, 0))
@@ -20,10 +20,10 @@ export function problem1(array) {
 export function problem2(array) {
   return array
     .reduce(
-      (curr, next) =>
-        !next
-          ? [...curr, []]
-          : [...curr.splice(-1), [...curr[curr.length - 1], next]],
+      (curr, next) => {
+        !next ? curr.push([]) : curr[curr.length - 1].push(next);
+        return curr;
+      },
       [[]]
     )
     .map((item) => item.reduce((a, b) => a + b, 0))
