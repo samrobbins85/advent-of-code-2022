@@ -1,5 +1,5 @@
 import { fileToArray } from "../common/utils.js";
-
+import fs from "fs";
 export const preProcess = (fileName) =>
   fileToArray(fileName).map((item) => parseInt(item, 10));
 
@@ -7,10 +7,10 @@ export function problem1(array) {
   return Math.max(
     ...array
       .reduce(
-        (curr, next) => {
-          !next ? curr.push([]) : curr[curr.length - 1].push(next);
-          return curr;
-        },
+        (curr, next) =>
+          !next
+            ? [...curr, []]
+            : [...curr.splice(-1), [...curr[curr.length - 1], next]],
         [[]]
       )
       .map((item) => item.reduce((a, b) => a + b, 0))
@@ -20,10 +20,10 @@ export function problem1(array) {
 export function problem2(array) {
   return array
     .reduce(
-      (curr, next) => {
-        !next ? curr.push([]) : curr[curr.length - 1].push(next);
-        return curr;
-      },
+      (curr, next) =>
+        !next
+          ? [...curr, []]
+          : [...curr.splice(-1), [...curr[curr.length - 1], next]],
       [[]]
     )
     .map((item) => item.reduce((a, b) => a + b, 0))
@@ -31,5 +31,31 @@ export function problem2(array) {
     .slice(0, 3)
     .reduce((a, b) => a + b, 0);
 }
+
+// Method inspired by Andrew Roberts https://github.com/andrew-cybsafe
+
+function shortProblem1(fileName) {
+  return Math.max(
+    ...fs
+      .readFileSync(fileName)
+      .toString()
+      .split("\n\n")
+      .map((item) => item.split("\n").map((item) => parseInt(item, 10)))
+      .map((item) => item.reduce((a, b) => a + b, 0))
+  );
+}
+
+function shortProblem2(fileName) {
+  return fs
+    .readFileSync(fileName)
+    .toString()
+    .split("\n\n")
+    .map((item) => item.split("\n").map((item) => parseInt(item, 10)))
+    .map((item) => item.reduce((a, b) => a + b, 0))
+    .sort((a, b) => b - a)
+    .slice(0, 3)
+    .reduce((a, b) => a + b, 0);
+}
+
 console.log(problem1(preProcess("day1/exampleInput.txt")));
 console.log(problem2(preProcess("day1/exampleInput.txt")));
