@@ -12,21 +12,13 @@ export function problem1(path) {
     }
   });
   result.forEach((str) => {
-    Object.keys(indices).forEach((index) => {
-      if (str[index] !== " ") {
-        stacks[indices[index]].push(str[index]);
-      }
-    });
+    Object.keys(indices).forEach(
+      (index) => str[index] !== " " && stacks[indices[index]].push(str[index])
+    );
   });
   data
     .filter((item) => item.includes("move"))
-    .map((item) =>
-      item
-        .split("move ")[1]
-        .replaceAll(" from ", "$")
-        .replaceAll(" to ", "$")
-        .split("$")
-    )
+    .map((item) => item.split("move ")[1].split(/\sfrom\s|\sto\s/))
     .forEach(([number, from, to]) => {
       const removed = stacks[from].splice(
         stacks[from].length - number,
@@ -51,21 +43,13 @@ export function problem2(path) {
     }
   });
   result.forEach((str) => {
-    Object.keys(indices).forEach((index) => {
-      if (str[index] !== " ") {
-        stacks[indices[index]].push(str[index]);
-      }
-    });
+    Object.keys(indices).forEach(
+      (index) => str[index] !== " " && stacks[indices[index]].push(str[index])
+    );
   });
   data
     .filter((item) => item.includes("move"))
-    .map((item) =>
-      item
-        .split("move ")[1]
-        .replaceAll(" from ", "$")
-        .replaceAll(" to ", "$")
-        .split("$")
-    )
+    .map((item) => item.split("move ")[1].split(/\sfrom\s|\sto\s/))
     .forEach(([number, from, to]) => {
       const removed = stacks[from].splice(
         stacks[from].length - number,
