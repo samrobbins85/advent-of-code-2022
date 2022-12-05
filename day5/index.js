@@ -1,20 +1,14 @@
-import { fileToArray } from "../common/utils";
+import { fileToArray } from "../common/utils.js";
 
 export function problem1(data) {
   const result = data.filter((item) => item.includes("[")).reverse();
-  const stackPositions = {};
-  const stacks = {};
-  data[result.length].split("").forEach((element, index) => {
-    if (element !== " ") {
-      stackPositions[index] = element;
-      stacks[element] = [];
-    }
-  });
-  result.forEach((str) => {
-    Object.entries(stackPositions).forEach(
-      ([index, value]) => str[index] !== " " && stacks[value].push(str[index])
-    );
-  });
+  const stacks = data[result.length].split("").reduce((prev, curr, index) => {
+    curr !== " " &&
+      (prev[curr] = result
+        .map((item) => item[index])
+        .filter((item) => item !== " "));
+    return prev;
+  }, {});
   data
     .filter((item) => item.includes("move"))
     .map((item) => item.split("move ")[1].split(/\sfrom\s|\sto\s/))
@@ -33,19 +27,13 @@ export function problem1(data) {
 
 export function problem2(data) {
   const result = data.filter((item) => item.includes("[")).reverse();
-  const indices = {};
-  const stacks = {};
-  data[result.length].split("").forEach((element, index) => {
-    if (element !== " ") {
-      indices[index] = element;
-      stacks[element] = [];
-    }
-  });
-  result.forEach((str) => {
-    Object.entries(indices).forEach(
-      ([index, value]) => str[index] !== " " && stacks[value].push(str[index])
-    );
-  });
+  const stacks = data[result.length].split("").reduce((prev, curr, index) => {
+    curr !== " " &&
+      (prev[curr] = result
+        .map((item) => item[index])
+        .filter((item) => item !== " "));
+    return prev;
+  }, {});
   data
     .filter((item) => item.includes("move"))
     .map((item) => item.split("move ")[1].split(/\sfrom\s|\sto\s/))
