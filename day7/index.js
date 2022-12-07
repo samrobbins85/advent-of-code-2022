@@ -44,12 +44,12 @@ export function problem2(array) {
         fileSystem[path.join("/")] = 0;
       }
     }
-    if (/^\d/.test(curr)) {
+    if (/^\d/.test(line)) {
       path.forEach((_, index) => {
         const currPath = path.slice(0, index + 1).join("/");
-        prev[currPath]
-          ? (prev[currPath] += parseInt(curr.split(" ")[0], 10))
-          : (prev[currPath] = parseInt(curr.split(" ")[0], 10));
+        fileSystem[currPath]
+          ? (fileSystem[currPath] += parseInt(line.split(" ")[0], 10))
+          : (fileSystem[currPath] = parseInt(line.split(" ")[0], 10));
       });
     }
   });
