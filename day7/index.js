@@ -1,6 +1,6 @@
 import { fileToArray } from "../common/utils.js";
 export function problem1(array) {
-  const fileSystem = {};
+  const fileSystem = { "/": 0 };
   let path = [];
   array.forEach((line) => {
     if (line.startsWith("$")) {
