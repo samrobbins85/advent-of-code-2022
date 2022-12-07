@@ -8,8 +8,7 @@ export function problem1(path) {
     .findIndex(
       (_, index, array) =>
         index >= 4 &&
-        array.slice(Math.max(0, index - 4), index).length ===
-          new Set(array.slice(Math.max(0, index - 4), index)).size
+        new Set(array.slice(Math.max(0, index - 4), index)).size === 4
     );
 }
 
@@ -21,8 +20,7 @@ export function problem2(path) {
     .findIndex(
       (_, index, array) =>
         index >= 14 &&
-        array.slice(Math.max(0, index - 14), index).length ===
-          new Set(array.slice(Math.max(0, index - 14), index)).size
+        new Set(array.slice(Math.max(0, index - 14), index)).size === 14
     );
 }
 
