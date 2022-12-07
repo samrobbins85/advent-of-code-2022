@@ -1,47 +1,17 @@
 import { fileToArray } from "../common/utils.js";
-export function problem1(array) {
-  let path = [];
-  return Object.values(
-    array.reduce(
-      (prev, curr) => {
-        if (curr.startsWith("$")) {
-          let command = curr.split("$ ")[1];
-          if (command === "cd /") {
-            path = ["/"];
-          } else if (command === "cd ..") {
-            path.pop();
-          } else if (command.startsWith("cd")) {
-            path.push(command.split("cd ")[1]);
-          }
-        }
-        if (/^\d/.test(curr)) {
-          path.forEach((_, index) => {
-            const currPath = path.slice(0, index + 1).join("/");
-            prev[currPath]
-              ? (prev[currPath] += parseInt(curr.split(" ")[0], 10))
-              : (prev[currPath] = parseInt(curr.split(" ")[0], 10));
-          });
-        }
-        return prev;
-      },
-      { "/": 0 }
-    )
-  ).reduce((prev, curr) => (curr <= 100000 ? prev + curr : prev), 0);
-}
 
-export function problem2(array) {
+function preProcess(array) {
   const fileSystem = { "/": 0 };
   let path = [];
   array.forEach((line) => {
-    if (line.startsWith("$")) {
-      let command = line.split("$ ")[1];
-      if (command === "cd /") {
+    if (line.startsWith("$ cd")) {
+      let command = line.split("$ cd ")[1];
+      if (command === "/") {
         path = ["/"];
-      } else if (command === "cd ..") {
+      } else if (command === "..") {
         path.pop();
-      } else if (command.startsWith("cd")) {
-        path.push(command.split("cd ")[1]);
-        fileSystem[path.join("/")] = 0;
+      } else {
+        path.push(command);
       }
     }
     if (/^\d/.test(line)) {
@@ -53,10 +23,22 @@ export function problem2(array) {
       });
     }
   });
+  return fileSystem;
+}
+
+export function problem1(array) {
+  return Object.values(preProcess(array)).reduce(
+    (prev, curr) => (curr <= 100000 ? prev + curr : prev),
+    0
+  );
+}
+
+export function problem2(array) {
+  const fileSystem = preProcess(array);
   return Object.values(fileSystem)
     .sort((a, b) => a - b)
     .find((item) => fileSystem["/"] - item <= 40000000);
 }
 
-console.log(problem1(fileToArray("day7/exampleInput.txt")));
-// console.log(problem2(fileToArray("day7/input.txt")));
+console.log(problem1(fileToArray("day7/input.txt")));
+console.log(problem2(fileToArray("day7/input.txt")));
