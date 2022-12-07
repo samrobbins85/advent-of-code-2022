@@ -12,15 +12,14 @@ export function problem1(array) {
             path.pop();
           } else if (command.startsWith("cd")) {
             path.push(command.split("cd ")[1]);
-            prev[path.join("/")] = 0;
           }
         }
         if (/^\d/.test(curr)) {
           path.forEach((_, index) => {
-            prev[path.slice(0, index + 1).join("/")] += parseInt(
-              curr.split(" ")[0],
-              10
-            );
+            const currPath = path.slice(0, index + 1).join("/");
+            prev[currPath]
+              ? (prev[currPath] += parseInt(curr.split(" ")[0], 10))
+              : (prev[currPath] = parseInt(curr.split(" ")[0], 10));
           });
         }
         return prev;
@@ -45,12 +44,12 @@ export function problem2(array) {
         fileSystem[path.join("/")] = 0;
       }
     }
-    if (/^\d/.test(line)) {
+    if (/^\d/.test(curr)) {
       path.forEach((_, index) => {
-        fileSystem[path.slice(0, index + 1).join("/")] += parseInt(
-          line.split(" ")[0],
-          10
-        );
+        const currPath = path.slice(0, index + 1).join("/");
+        prev[currPath]
+          ? (prev[currPath] += parseInt(curr.split(" ")[0], 10))
+          : (prev[currPath] = parseInt(curr.split(" ")[0], 10));
       });
     }
   });
