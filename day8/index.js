@@ -8,7 +8,7 @@ export function problem1(input) {
   let count = input[0].length * 2 + (input.length - 2) * 2;
   for (let y = 1; y < input.length - 1; y++)
     for (let x = 1; x < input[1].length - 1; x++) {
-      const verticalArr = input.map((item) => item[x]).flat();
+      const verticalArr = input.map((item) => item[x]);
       if (
         input[y].slice(0, x).every((tree) => tree < input[y][x]) ||
         input[y].slice(x + 1).every((tree) => tree < input[y][x]) ||
@@ -45,7 +45,7 @@ export function problem2(input) {
   let maxScore = 0;
   for (let y = 1; y < input.length - 1; y++)
     for (let x = 1; x < input[1].length - 1; x++) {
-      const verticalArr = input.map((item) => item[x]).flat();
+      const verticalArr = input.map((item) => item[x]);
       const score =
         lengthIfNotFound(input[y].slice(0, x).reverse(), input[y][x]) *
         lengthIfNotFound(input[y].slice(x + 1), input[y][x]) *
@@ -62,7 +62,7 @@ function reducerProblem2(input) {
       Math.max(
         prev,
         curr.reduce((p, c, x) => {
-          const verticalArr = input.map((item) => item[x]).flat();
+          const verticalArr = input.map((item) => item[x]);
           return Math.max(
             p,
             lengthIfNotFound(input[y].slice(0, x).reverse(), c) *
