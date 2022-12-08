@@ -21,8 +21,25 @@ export function problem1(input) {
   return count;
 }
 
-const scoreNormalise = (score, array) =>
-  score != -1 ? score + 1 : array.length;
+function reducerProblem1(input) {
+  return input.reduce(
+    (prev, curr, y) =>
+      prev +
+      curr.reduce((p, c, x) => {
+        const verticalArr = input.map((item) => item[x]).flat();
+        return input[y].slice(0, x).every((t) => t < c) ||
+          input[y].slice(x + 1).every((t) => t < c) ||
+          verticalArr.slice(0, y).every((t) => t < c) ||
+          verticalArr.slice(y + 1).every((t) => t < c)
+          ? p + 1
+          : p;
+      }, 0),
+    0
+  );
+}
+
+const lengthIfNotFound = (array, c) =>
+  array.findIndex((t) => t >= c) + 1 || array.length;
 
 export function problem2(input) {
   let maxScore = 0;
@@ -30,33 +47,37 @@ export function problem2(input) {
     for (let x = 1; x < input[1].length - 1; x++) {
       const verticalArr = input.map((item) => item[x]).flat();
       const score =
-        scoreNormalise(
-          input[y]
-            .slice(0, x)
-            .reverse()
-            .findIndex((tree) => tree >= input[y][x]),
-          input[y].slice(0, x)
-        ) *
-        scoreNormalise(
-          input[y].slice(x + 1).findIndex((tree) => tree >= input[y][x]),
-          input[y].slice(x + 1)
-        ) *
-        scoreNormalise(
-          verticalArr
-            .slice(0, y)
-            .reverse()
-            .findIndex((tree) => tree >= input[y][x]),
-          verticalArr.slice(0, y)
-        ) *
-        scoreNormalise(
-          verticalArr.slice(y + 1).findIndex((tree) => tree >= input[y][x]),
-          verticalArr.slice(y + 1)
-        );
-
-      score > maxScore && (maxScore = score);
+        lengthIfNotFound(input[y].slice(0, x).reverse(), input[y][x]) *
+        lengthIfNotFound(input[y].slice(x + 1), input[y][x]) *
+        lengthIfNotFound(verticalArr.slice(0, y).reverse(), input[y][x]) *
+        lengthIfNotFound(verticalArr.slice(y + 1), input[y][x]);
+      maxScore = Math.max(score, maxScore);
     }
   return maxScore;
 }
 
-console.log(problem1(preProcess("day8/input.txt")));
-console.log(problem2(preProcess("day8/input.txt")));
+function reducerProblem2(input) {
+  return input.reduce(
+    (prev, curr, y) =>
+      Math.max(
+        prev,
+        curr.reduce((p, c, x) => {
+          const verticalArr = input.map((item) => item[x]).flat();
+          return Math.max(
+            p,
+            lengthIfNotFound(input[y].slice(0, x).reverse(), c) *
+              lengthIfNotFound(input[y].slice(x + 1), c) *
+              lengthIfNotFound(verticalArr.slice(0, y).reverse(), c) *
+              lengthIfNotFound(verticalArr.slice(y + 1), c)
+          );
+        }),
+        0
+      ),
+    0
+  );
+}
+
+console.log(problem1(preProcess("day8/exampleInput.txt")));
+console.log(reducerProblem1(preProcess("day8/exampleInput.txt")));
+console.log(problem2(preProcess("day8/exampleInput.txt")));
+console.log(reducerProblem2(preProcess("day8/exampleInput.txt")));
