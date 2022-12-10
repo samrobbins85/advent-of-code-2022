@@ -21,9 +21,9 @@ function genericProblem(array, processor, state) {
 export const problem1 = (array) =>
   genericProblem(
     array,
-    (i, X, state) => !((i - 20) % 40) && (state[0] += X * i),
-    [0]
-  )[0];
+    (i, X, state) => !((i - 20) % 40) && (state.result += X * i),
+    { result: 0 }
+  ).result;
 
 export const problem2 = (array) =>
   genericProblem(
