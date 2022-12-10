@@ -21,7 +21,7 @@ function genericProblem(array, processor, state) {
 export const problem1 = (array) =>
   genericProblem(
     array,
-    (i, X, state) => !((i - 20) % 40) && (state.result += X * i),
+    (i, X, state) => !((i - 20) % 40) && i <= 220 && (state.result += X * i),
     { result: 0 }
   ).result;
 
