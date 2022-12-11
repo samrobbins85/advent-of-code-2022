@@ -20,12 +20,12 @@ export function genericProblem(fileName, size, generateRiskLevel) {
       operation: item[2].split("= ")[1],
       numberOfItemsInspected: 0,
     }));
-  let modulo = input.reduce((prev, curr) => prev * curr.testDivisible, 1);
+  const modulo = input.reduce((prev, curr) => prev * curr.testDivisible, 1);
   for (let i = 0; i < size; i++) {
     input.forEach((monkey) => {
       monkey.numberOfItemsInspected += monkey.starting.length;
       monkey.starting.forEach((item) => {
-        let riskLevel = generateRiskLevel(item, monkey.operation, modulo);
+        const riskLevel = generateRiskLevel(item, monkey.operation, modulo);
         input[
           riskLevel % monkey.testDivisible === 0
             ? monkey.ifTrue
