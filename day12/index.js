@@ -33,7 +33,7 @@ export function genericProblem(array, startChar) {
 
     if (y === end[0] && x === end[1]) return steps;
 
-    directions.forEach(([dx, dy]) => {
+    directions.forEach(([dy, dx]) => {
       if (
         !(
           input[y + dy]?.[x + dx] === undefined ||
