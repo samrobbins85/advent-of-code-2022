@@ -35,11 +35,8 @@ export function genericProblem(array, startChar) {
 
     directions.forEach(([dy, dx]) => {
       if (
-        !(
-          input[y + dy]?.[x + dx] === undefined ||
-          input[y + dy][x + dx] > input[y][x] + 1 ||
-          visited[y][x]
-        )
+        input[y + dy]?.[x + dx] !== undefined &&
+        input[y + dy][x + dx] <= input[y][x] + 1
       ) {
         queue.push({
           position: [y + dy, x + dx],
