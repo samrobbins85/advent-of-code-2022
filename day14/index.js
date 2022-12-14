@@ -1,5 +1,7 @@
 import { fileToArray } from "../common/utils.js";
 
+const isEmpty = (cell) => cell === "." || cell === undefined;
+
 const generate_ranges = (input) =>
   input.reduce(
     (prev, curr) => {
@@ -26,7 +28,6 @@ function genericProblem(data, part2, condition) {
   input.forEach((row) => {
     for (let i = 0; i < row.length - 1; i++) {
       if (row[i][0] === row[i + 1][0]) {
-        // Moving vertically
         for (
           let y = Math.min(row[i][1], row[i + 1][1]);
           y <= Math.max(row[i][1], row[i + 1][1]);
@@ -35,7 +36,6 @@ function genericProblem(data, part2, condition) {
           arr[y][row[i][0]] = "#";
         }
       } else {
-        // Moving horizontally
         for (
           let x = Math.min(row[i][0], row[i + 1][0]);
           x <= Math.max(row[i][0], row[i + 1][0]);
@@ -50,27 +50,17 @@ function genericProblem(data, part2, condition) {
   let sandCount = 0;
 
   mainLoop: while (true) {
-    // Drop sand
     let check_index = [0, 500];
     while (true) {
       if (condition(check_index, arr)) {
         break mainLoop;
       }
-      if (
-        arr[check_index[0] + 1]?.[check_index[1]] === "." ||
-        arr[check_index[0] + 1]?.[check_index[1]] === undefined
-      ) {
+      if (isEmpty(arr[check_index[0] + 1]?.[check_index[1]])) {
         check_index[0] += 1;
-      } else if (
-        arr[check_index[0] + 1]?.[check_index[1] - 1] === "." ||
-        arr[check_index[0] + 1]?.[check_index[1] - 1] === undefined
-      ) {
+      } else if (isEmpty(arr[check_index[0] + 1]?.[check_index[1] - 1])) {
         check_index[0] += 1;
         check_index[1] -= 1;
-      } else if (
-        arr[check_index[0] + 1]?.[check_index[1] + 1] === "." ||
-        arr[check_index[0] + 1]?.[check_index[1] + 1] === undefined
-      ) {
+      } else if (isEmpty(arr[check_index[0] + 1]?.[check_index[1] + 1])) {
         check_index[0] += 1;
         check_index[1] += 1;
       } else {
