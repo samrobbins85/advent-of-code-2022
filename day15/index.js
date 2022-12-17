@@ -1,65 +1,73 @@
 import { fileToArray } from "../common/utils.js";
 
-function problem1(array) {
-  const height = 10;
+function manhattanDistance(x1, y1, x2, y2) {
+  return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+}
+
+export function problem1(array) {
+  const height = 2000000;
   const input = array.map((item) =>
-    [...item.matchAll(/\d+/g)].map((i) => parseInt(i[0], 10))
+    [...item.matchAll(/-?\d+/g)].map((i) => parseInt(i[0], 10))
   );
-  //   const beaconOnRow = input.filter((item) => item[3] === 10).length;
-  const beaconOnRow = new Set();
-  input.forEach((item) => {
-    if (item[3] === height) {
-      beaconOnRow.add(item[2]);
+  let notBeacon = new Set();
+  input.forEach((data) => {
+    const mDist = manhattanDistance(...data);
+    const yFromSensor = Math.abs(data[1] - height);
+    for (
+      let i = data[0] - mDist + yFromSensor;
+      i < data[0] + mDist - yFromSensor;
+      i++
+    ) {
+      notBeacon.add(i);
     }
   });
-  const max = Math.max(
-    ...input
-      .map(
-        (item) =>
-          item[0] + (Math.abs(item[0] - item[2]) + Math.abs(item[1] - item[3]))
-      )
-      .flat()
+  return notBeacon.size;
+}
+
+export function problem2(array) {
+  const bound = 4000000;
+  const input = array.map((item) =>
+    [...item.matchAll(/-?\d+/g)].map((i) => parseInt(i[0], 10))
   );
-  const min = Math.min(
-    ...input.map(
-      (item) =>
-        item[0] - (Math.abs(item[0] - item[2]) + Math.abs(item[1] - item[3]))
-    )
-  );
-  console.log(min);
-  console.log(max);
-  const processed = array
-    .map((item) => [...item.matchAll(/\d+/g)].map((i) => parseInt(i[0], 10)))
-    .map((item) => ({
-      sensor: [item[0], item[1]],
-      beacon: [item[2], item[3]],
-      radius: Math.abs(item[0] - item[2]) + Math.abs(item[1] - item[3]),
-      distanceScanned: Math.sqrt(
-        Math.abs(item[0] - item[2]) ** 2 + Math.abs(item[1] - item[3]) ** 2
-      ),
-    }));
-  // .filter((item) => Math.abs(item.sensor[1] - height) <= item.radius);
-  // .filter((item) =>
-  //   item.sensor[1] <= height
-  //     ? item.sensor[1] + item.distanceScanned >= height
-  //     : item.sensor[1] - item.distanceScanned <= height
-  // );
-  let count = 0;
-  for (let i = Math.floor(min); i < Math.ceil(max); i++) {
-    // For each cell
-    if (
-      processed.some((item) => {
-        return (
-          Math.abs(item.sensor[0] - height) + Math.abs(item.sensor[1] - i) <
-          item.radius
-        );
-      })
-    ) {
-      count++;
-    }
-  }
-  return count - beaconOnRow.size;
+  const processed = input.map((item) => ({
+    x: item[0],
+    y: item[1],
+    mDist: manhattanDistance(...item),
+  }));
+  // With positive gradient
+  const posYInt = new Set();
+  // With negative gradient
+  const negYInt = new Set();
+  processed.forEach(({ x, y, mDist }) => {
+    posYInt.add(y - x + mDist + 1);
+    posYInt.add(y - x - mDist - 1);
+    negYInt.add(y + x + mDist + 1);
+    negYInt.add(y + x - mDist - 1);
+  });
+  let result = 0;
+  posYInt.forEach((pIntercept) => {
+    negYInt.forEach((nIntercept) => {
+      const intersection = [
+        Math.floor((nIntercept - pIntercept) / 2),
+        Math.floor((nIntercept + pIntercept) / 2),
+      ];
+      if (
+        intersection[0] < bound &&
+        intersection[0] > 0 &&
+        intersection[1] < bound &&
+        intersection[1] > 0 &&
+        processed.every(
+          (scanner) =>
+            manhattanDistance(...intersection, scanner.x, scanner.y) >
+            scanner.mDist
+        )
+      ) {
+        result = bound * intersection[0] + intersection[1];
+      }
+    });
+  });
+  return result;
 }
 
 console.log(problem1(fileToArray("day15/input.txt")));
-// Too low
+console.log(problem2(fileToArray("day15/input.txt")));
